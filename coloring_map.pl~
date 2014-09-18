@@ -1,0 +1,26 @@
+% Map Coloring
+
+% Possible pairs of colors of neighbor ountries
+
+n(red,green).
+n(red,blue).
+n(red,yellow).
+n(green,red).
+n(green,blue).
+n(green,yellow).
+n(blue,red).
+n(blue,green).
+n(blue,yellow).
+n(yellow,red).
+n(yellow,green).
+n(yellow,blue).
+
+% Part of Europe (IT = Italy, SI = Slovenia, HR = Crotia, CH = Switzerland)
+
+colors(IT,SI,HR,AT,HU,DE,SK,CZ,PL,SEA) :-
+	SEA = blue,
+	n(IT,CH), n(IT,SI), n(IT,SEA),
+	n(SI,AT), n(SI,HR), n(SI,SEA),
+	n(HR,HU), n(HR,SEA),
+	n(AT,CH), n(AT,DE), n(AT,HU), n(AT,SK), n(AT, CZ),
+	n()

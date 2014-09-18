@@ -1,0 +1,10 @@
+% Scheduling a meeting
+
+% schedule( TimeA, A1, A2, TimeB, B1, B2, TimeD, D1, D2):
+%  TimeA and experts A1, A2 assigned to seesion on Artificial Intelligence,
+%  TimeB, B1, B2 to session on bioinformatics, and similar for databases.
+
+schedule( Ta, A1, A2, Tb, B1, B2, Td, D1, D2) :-
+    session( Ta, artificial_intelligence, A1, A2),
+    session( Tb, bioinformatics, B1, B2),
+    session( 
