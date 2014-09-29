@@ -1,10 +1,16 @@
-iPeriode(periode(dato(AAr, Maaned, Dag), dato(AAr, Maaned, Dag)), dato(AAr, Maaned, Dag)).
+alertlevel(X,green) :- X<3,!.
+alertlevel(X,yellow) :- X<6,!.
+alertlevel(X,red).
 
-iPeriode(periode(dato(AAr1, Maaned1, Dag1), dato(AAr2, Maaned2, Dag2)), dato(AAr3, Maaned3, Dag3)) :-
-	between(AAr1,AAr2,AAr3),
-	Maaned1 < Maaned3, Maaned3 < Maaned2,
-	iPeriode(periode(dato(AAr1, Maaned1, Dag1), dato(AAr2, Maaned2, Dag2)), dato(AAr3, Maaned3, Dag3)).
-	
-iPeriode(periode(dato(AAr1, Maaned1, Dag1), dato(AAr2, Maaned2, Dag2)), dato(AAr3, Maaned3, Dag3)) :-
-	between(AAr1,AAr2,AAr3),
-	not(between(Dag1,Dag2,Dag3)). 
+max(X,Y,X) :- X >= Y.
+max(X,Y,Y) :- X < Y.
+
+max1(X,Y,X) :- X>=Y,!.
+max1(X,Y,Y).
+
+add(X,L,L) :- member(X,L), !.
+add(X,L,[X|L]).
+
+intelligent(per).
+intelligent(pal).
+intelligent(espen).

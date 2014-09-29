@@ -1,3 +1,5 @@
+% Written by Paul Grant
+
 % Innebygde predikater dere ikke skal endre på.
 skrivDatoNorsk(Dato) :-
 	Dato = dato(AAr, Maaned, Dag),
