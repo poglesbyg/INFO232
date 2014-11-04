@@ -1,0 +1,67 @@
+'Aalborg'.
+'106 916'.
+'storby'.
+'Grunnlagt i vikingtiden'.
+1534.
+790.
+'Odense'.
+'158 678'.
+'storby'.
+'Kjent for sin marsipanfabrikk'.
+1556.
+1013.
+'Aarhus'.
+'259 754'.
+'Storby'.
+'Het Arus i vikingtiden'.
+1548.
+890.
+'Kobenhavn'.
+'1 246 611'.
+'hovedstad'.
+'Hovedstaden i Danmark'.
+1659.
+943.
+'Stockholm'.
+'871 952'.
+'hovedstad'.
+'Hovedstaden i sverige'.
+1915.
+537.
+'Trondheim'.
+'182 035'.
+'Storby'.
+'Her ligger Nidarosdomen, hvor de norske kongene blir kronet'.
+1557.
+78.
+'Tromso'.
+'71 590'.
+'Storby'.
+'Byen er kjent som Nordens Paris'.
+1956.
+-614.
+'Oslo'.
+'634 463'.
+'hovedstad'.
+'Hovedstaden i Norge'.
+1573.
+471.
+'Stavanger'.
+'130 754'.
+'Storby'.
+'Innbyggerene her er kjent som siddiser'.
+1335.
+577.
+'Bergen'.
+'272520'.
+'storby'.
+'Verdens navle'.
+1317.
+418.
+'Alta'.
+'19 822'.
+'smaby'.
+'Ingen er helt sikker på hva navnet kommer av'.
+2155.
+-650.
+
