@@ -12,6 +12,10 @@ lesFil_hp(Stream,[X|L]) :-
     read(Stream,X),
     lesFil_hp(Stream,L).
 
+splitLines([end_of_file], []).
+splitLines([Name, Pop, Status, Fact, CoordX, CoordY | Rest], [city(Name, Pop, Status, Fact, CoordX, CoordY) | Return]) :-
+  splitLines(Rest,Return).
+
 % beskriv/1 takes in a city name and prints out a short 
 % description of it
 beskriv([]).
@@ -21,23 +25,13 @@ beskriv(Place) :-
   write(' med '), write(Pop), write(' innbyggere.'),nl,
   write(Fact),nl,nl.
 
-splitLines([],[]).
-splitLines([end_of_file], []).
-splitLines([Name, Pop, Status, Fact, CoordX, CoordY | Rest], [city(Name, Pop, Status, Fact, CoordX, CoordY) | Return]) :-
-  %write(Name), write(' '),
-  assert(city(Name, Pop, Status, Fact, CoordX, CoordY)),
-  splitLines(Rest, Return).
-
 listByer([end_of_file],[]).
 listByer([Name, Pop, Status, Fact, CoordX, CoordY | Rest], [city(Name, Pop, Status, Fact, CoordX, CoordY) | Return]) :-
   write(Name), nl,
   listByer(Rest, Return).
 
-
-
 main :-
   lesFil('stedsinfo.txt', Lines),
-  %write(Lines),nl,
   splitLines(Lines, Return),
   maplist(beskriv,Return),
   listByer(Lines,Return).
