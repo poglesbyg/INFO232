@@ -41,7 +41,7 @@ readRoutes :-
 createRoutes([end_of_file]).
 
 createRoutes([Start, End, 'fly', TimeInMin, Price| Rest]) :-
-    assert(rute(Start, End, Transportation, Price, TimeInMin)),
+    assert(route(Start, End, Transportation, Price, TimeInMin)),
     createRoutes(Rest).
 
 createRoutes([Start, End, Transportation, TimeInMin, Price | Rest]) :-
@@ -115,10 +115,18 @@ s(Node, Next, Cost) :- route(Node,Next,_,_,Cost).
 finnReiseRaskest(Start, End) :-
     assert(goal(End)),
     bestfirst(Start, Sol),
-    write(Sol),
+    reverse(Sol, Return),
+    writeRoutes(Return),
     retract(goal(End)).
-    
 
 retractStuff :- retractall(route(_,_,_,_,_)), retractall(city(_,_,_,_,_,_)).
 
+
+writeRoutes([Head| []]) :- goal(Head).
+writeRoutes([Head, Next | Rest]) :-
+    route(Head, Next, Transportation, Time, Price),
+    nl, write(Transportation), write(' fra '), write(Head), write(' til '),
+    write(Next), write('.'),
+    writeRoutes([Next|Rest]).
+    
 main :- write('Hello World'), finnReiseRaskest('Oslo','Bergen').
