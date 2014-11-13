@@ -115,7 +115,6 @@ s(Node, Next, Cost) :- route(Node,Next,_,_,Cost).
 finnReiseRaskest(Start, End) :-
     assert(goal(End)),
     bestfirst(Start, Sol),
-    write(Sol),
     reverse(Sol, Return),
     retract(goal(End)),
     writeRoutes(Return).
