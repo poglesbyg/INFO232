@@ -52,11 +52,6 @@ createRoutes([Start, End, Transportation, TimeInMin, Price | Rest]) :-
 rute(Start,End) :-
     route(Start,End,_,_,_).
 
-lagreRuter([Fra, Til, 'fly', Min, Pris| Tail]) :-
-    assert(rute(Fra, Til, Tilbud, Pris, Min)),
-    lagreRuter(Tail).
-
-
 :- readRoutes, readStead.
 
 % astar algorithm
@@ -126,4 +121,4 @@ finnReiseRaskest(Start, End) :-
 
 retractStuff :- retractall(route(_,_,_,_,_)), retractall(city(_,_,_,_,_,_)).
 
-main :- write('Hello World'), finnReiseRaskest('Oslo','Stockholm').
+main :- write('Hello World'), finnReiseRaskest('Oslo','Bergen').
