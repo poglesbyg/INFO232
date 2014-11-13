@@ -1,13 +1,9 @@
-sist([X],X,[]).
-sist([Y|Ys], X, [Y | Xs]) :- 
-	sist(Ys, X, Xs).
+lessThan(X, X).
+lessThan(X, Y) :-
+  Y > X,
+  Z = X,
+  write(Z),
+  lessThan(X, Z).
 
-palindrome([A|As]) :-
-	sist(As, B, Rest),
-	A == B, 
-	palindrome(Rest).
 
-main :-
-	palindrome([a,b,b,a]).
-
-main.
+main :- lessThan(3, 2).
