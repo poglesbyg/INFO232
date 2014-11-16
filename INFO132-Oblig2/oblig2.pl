@@ -13,7 +13,10 @@ read(Stream,X),
 lesFil_hp(Stream,L).
 
 writeDataBase :-
-    lesFil('stedsinfo.txt',
+    lesFil('stedsinfo.txt',Places),
+    createPlaces(Places),
+    lesFil('reiseruter-2.txt',Routes),
+    createRoutes(Routes).
 
 createPlaces([end_of_file]).
 createPlaces([Name, Pop, Status, Fact, CoordX, CoordY | Rest]) :-
@@ -28,7 +31,7 @@ createRoutes([Start, End, Transportation, TimeInMin, Price | Rest]) :-
     assert(route(Start, End, Transportation, TimeInMin, Price)),
     createRoutes(Rest).
 
-:- readRoutes, readStead.
+:- writeDataBase.
 
 % beskriv takes in a city name and prints out a short 
 % description of it
@@ -45,7 +48,7 @@ listByer(List) :-
 
 % rute makes sure a route is found between cities
 rute(Start,End) :-
-    ;(rute(Fra,Til,_,_,_), rute(Til,Fra,_,_,_)).
+    ;(rute(Start,End,_,_,_), rute(End,Start,_,_,_)).
 
 % heuristic is the guess for the time that it will take from a node
 h(Node, Estimate) :-
@@ -83,21 +86,21 @@ finnReiseRaskest(Start, End) :-
 writeRoutes([_ | []], Time, Price) :-
     Time is 0, Price is 0, true.
 writeRoutes([Head, Next | Rest], TotalTime, TotalPrice) :-
-    findall(KT1/Tid1/Pr1,route(Fra,Til,KT1,Tid1,Pr1),RuteSpecs),
-    minRoute(RuteSpecs,KT/Tid/Pr),
-    write(KT),write(' fra '),write(Fra),write(' til '),write(Til),write(.),nl,
-    utskrift([Til|Tail],TotalTid1,TotalPris1),
-    TotalTid is +(TotalTid1,Tid), TotalPris is +(TotalPris1,Pr).
+    findall(KT1/Time1/Pr1,route(Head,Next,KT1,Time1,Pr1),RuteSpecs),
+    minRoute(RuteSpecs,KT/Time/Pr),
+    write(KT),write(' fra '),write(Head),write(' til '),write(Next),write(.),nl,
+    writeRoutes([Next|Rest],TotalTime1,TotalPrice1),
+    TotalTime is +(TotalTime1,Time), TotalPrice is +(TotalPrice1,Pr).
 
 minRoute([H|[]],H).
-minRoute([H1,H2|[]], Return) :-
+minRoute([H1,H2|[]], Out) :-
     H1 = _/Time1/_,
     H2 = _/Time2/_,
     ( Time1 =< Time2, Out = H1 ); Out = H2.
 minRoute([H1,H2,H3|[]], Out) :-
-    H1 = _/Tid1/_,
-    H2 = _/Tid2/_,
-    H3 = _/Tid3/_,
+    H1 = _/Time1/_,
+    H2 = _/Time2/_,
+    H3 = _/Time3/_,
     ( (Time1 =< Time2), (Time1 =< Time3), Out = H1 );
     ( (Time2 =< Time1), (Time2 =< Time3), Out = H2 );
     ( (Time3 =< Time1), (Time3 =< Time2), Out = H3 ).
