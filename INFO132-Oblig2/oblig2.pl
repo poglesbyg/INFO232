@@ -112,22 +112,27 @@ heuristic(Dist, Time) :-
 
 s(Node, Next, Cost) :- route(Node,Next,_,_,Cost). 
 
+help(Start, End) :- not(finnReiseRaskest(Start,End)).
+
 finnReiseRaskest(Start, End) :-
     assert(goal(End)),
     bestfirst(Start, Sol),
-    write(Sol),
+    write('This is the Sol '), write(Sol),nl,
     reverse(Sol, Return),
+    write('This is the Return '), write(Return), nl,
     retract(goal(End)),
     writeRoutes(Return).
 
 retractStuff :- retractall(route(_,_,_,_,_)), retractall(city(_,_,_,_,_,_)).
 
 
-writeRoutes([Head| []]) :- goal(Head).
+writeRoutes([Head | []]) :- goal(Head).
 writeRoutes([Head, Next | Rest]) :-
-    route(Head, Next, Transportation, Time, Price),
+    Transportation = 'fly',
+    R = route(Head, Next, Transportation, Time, Price),
+    nl, write(R),nl,
     nl, write(Transportation), write(' fra '), write(Head), write(' til '),
-    write(Next), write('.'),
+    write(Next), write('.'),nl, write(Time), nl, write(Price),
     writeRoutes([Next|Rest]).
     
-main :- write('Hello World'), finnReiseRaskest('Oslo','Bergen').
+main :- write('Hello World'),nl, help('Bergen','Stockholm').
