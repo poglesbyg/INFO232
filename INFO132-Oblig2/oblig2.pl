@@ -25,7 +25,7 @@ createPlaces([Name, Pop, Status, Fact, CoordX, CoordY | Rest]) :-
 
 createRoutes([end_of_file]).
 createRoutes([Start, End, 'fly', TimeInMin, Price | Rest]) :-
-    assert(route(Start, End, Transportation, Price, Time)),
+    assert(route(Start, End, 'fly', Price, TimeInMin)),
     createRoutes(Rest).
 createRoutes([Start, End, Transportation, TimeInMin, Price | Rest]) :- 
     assert(route(Start, End, Transportation, TimeInMin, Price)),
