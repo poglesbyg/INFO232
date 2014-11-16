@@ -12,16 +12,25 @@ lesFil_hp(Stream,[X|L]) :-
 read(Stream,X),
 lesFil_hp(Stream,L).
 
-readStead :-
-    lesFil('stedsinfo.txt',Read),
-    createPlaces(Read).
+writeDataBase :-
+    lesFil('stedsinfo.txt',
 
 createPlaces([end_of_file]).
 createPlaces([Name, Pop, Status, Fact, CoordX, CoordY | Rest]) :-
     assert(city(Name, Pop, Status, Fact, CoordX, CoordY)),
     createPlaces(Rest).
 
-% beskriv/1 takes in a city name and prints out a short 
+createRoutes([end_of_file]).
+createRoutes([Start, End, 'fly', TimeInMin, Price| Rest]) :-
+    assert(route(Start, End, Transportation, Price, TimeInMin)),
+    createRoutes(Rest).
+createRoutes([Start, End, Transportation, TimeInMin, Price | Rest]) :-
+    assert(route(Start, End, Transportation, TimeInMin, Price)),
+    createRoutes(Rest).
+
+:- readRoutes, readStead.
+
+% beskriv takes in a city name and prints out a short 
 % description of it
 beskriv(Name) :-
     city(Name, Pop, Status, Fact, CoordX, CoordY),
@@ -34,62 +43,9 @@ beskriv(Name) :-
 listByer(List) :-
     findall(Name, city(Name, _,_,_,_,_),List).
 
-readRoutes :-
-    lesFil('reiseruter-2.txt',Read),
-    createRoutes(Read).
-
-createRoutes([end_of_file]).
-
-createRoutes([Start, End, 'fly', TimeInMin, Price| Rest]) :-
-    assert(route(Start, End, Transportation, Price, TimeInMin)),
-    createRoutes(Rest).
-
-createRoutes([Start, End, Transportation, TimeInMin, Price | Rest]) :-
-    assert(route(Start, End, Transportation, TimeInMin, Price)),
-    createRoutes(Rest).
-
 % rute makes sure a route is found between cities
 rute(Start,End) :-
-    rute(Fra,Til,_,_,_);
-    rute(Til,Fra,_,_,_)
-
-    :- readRoutes, readStead.
-
-% astar algorithm
-
-bestfirst(Start,Sol) :-
-    expand([path([Start],0,0)],Sol).
-
-expand([path([N|Tail],_,_)|_],[N|Tail]) :- goal(N),!.
-expand([path([N|Tail],G,_)|Rest],Sol) :-
-    findall(M/C,(s(N,M,C),\+member(M,Tail)),Succ),
-    succlist(G,Succ,[N|Tail],Paths),
-    addsucclist(Paths,Rest,Newpaths),
-    expand(Newpaths,Sol).
-
-succlist(_,[],_,[]).
-succlist(G0,[N/C|Rest],Tail,[path([N|Tail],G,F)|Restpaths]) :-
-    G is G0+C,
-    h(N,H),
-    F is G+H,
-    succlist(G0,Rest,Tail,Restpaths).
-
-addsucclist([],Newpaths,Newpaths).
-addsucclist([Head|Tail],Rest,Newpaths) :-
-    insertordered(Head,Rest,Paths),
-    addsucclist(Tail,Paths,Newpaths).
-
-insertordered(P0,[P1|Rest],[P0,P1|Rest]) :-
-    f(P0,F0),
-    f(P1,F1),
-    F0 < F1,!.
-insertordered(P0,[P1|Rest], [P1|Newrest]) :-
-    insertordered(P0,Rest,Newrest).
-insertordered(P,[],[P]).
-
-f(path(_,_,F),F).
-g(path(_,G,_),G).
-
+    ;(rute(Fra,Til,_,_,_), rute(Til,Fra,_,_,_)).
 
 % heuristic is the guess for the time that it will take from a node
 h(Node, Estimate) :-
@@ -146,7 +102,43 @@ minRoute([H1,H2,H3|[]], Out) :-
     ( (Time2 =< Time1), (Time2 =< Time3), Out = H2 );
     ( (Time3 =< Time1), (Time3 =< Time2), Out = H3 ).
 
-retractStuff :- retractall(route(_,_,_,_,_)), retractall(city(_,_,_,_,_,_)).
+retractStuff :- retractall(route(_,_,_,_,_)),
+                retractall(city(_,_,_,_,_,_)).
+
+% astar algorithm
+
+bestfirst(Start,Sol) :-
+    expand([path([Start],0,0)],Sol).
+
+expand([path([N|Tail],_,_)|_],[N|Tail]) :- goal(N),!.
+expand([path([N|Tail],G,_)|Rest],Sol) :-
+    findall(M/C,(s(N,M,C),\+member(M,Tail)),Succ),
+    succlist(G,Succ,[N|Tail],Paths),
+    addsucclist(Paths,Rest,Newpaths),
+    expand(Newpaths,Sol).
+
+succlist(_,[],_,[]).
+succlist(G0,[N/C|Rest],Tail,[path([N|Tail],G,F)|Restpaths]) :-
+    G is G0+C,
+    h(N,H),
+    F is G+H,
+    succlist(G0,Rest,Tail,Restpaths).
+
+addsucclist([],Newpaths,Newpaths).
+addsucclist([Head|Tail],Rest,Newpaths) :-
+    insertordered(Head,Rest,Paths),
+    addsucclist(Tail,Paths,Newpaths).
+
+insertordered(P0,[P1|Rest],[P0,P1|Rest]) :-
+    f(P0,F0),
+    f(P1,F1),
+    F0 < F1,!.
+insertordered(P0,[P1|Rest], [P1|Newrest]) :-
+    insertordered(P0,Rest,Newrest).
+insertordered(P,[],[P]).
+
+f(path(_,_,F),F).
+g(path(_,G,_),G).
 
 main :- write('Hello World'),nl,
-        finnReiseRaskest('Bergen','Stockholm').
+        finnReiseRaskest('Bergen', 'Stockholm').
