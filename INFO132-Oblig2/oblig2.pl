@@ -24,10 +24,10 @@ createPlaces([Name, Pop, Status, Fact, CoordX, CoordY | Rest]) :-
     createPlaces(Rest).
 
 createRoutes([end_of_file]).
-createRoutes([Start, End, 'fly', TimeInMin, Price| Rest]) :-
-    assert(route(Start, End, Transportation, Price, TimeInMin)),
+createRoutes([Start, End, 'fly', TimeInMin, Price | Rest]) :-
+    assert(route(Start, End, Transportation, Price, Time)),
     createRoutes(Rest).
-createRoutes([Start, End, Transportation, TimeInMin, Price | Rest]) :-
+createRoutes([Start, End, Transportation, TimeInMin, Price | Rest]) :- 
     assert(route(Start, End, Transportation, TimeInMin, Price)),
     createRoutes(Rest).
 
@@ -87,10 +87,10 @@ writeRoutes([_ | []], Time, Price) :-
     Time is 0, Price is 0, true.
 writeRoutes([Head, Next | Rest], TotalTime, TotalPrice) :-
     findall(KT1/Time1/Pr1,route(Head,Next,KT1,Time1,Pr1),RuteSpecs),
-    minRoute(RuteSpecs,KT/Time/Pr),
-    write(KT),write(' fra '),write(Head),write(' til '),write(Next),write(.),nl,
+    minRoute(RuteSpecs, KT/Time/Pr),
+    write(KT),write(' from '),write(Head),write(' to '),write(Next),write(.),nl,
     writeRoutes([Next|Rest],TotalTime1,TotalPrice1),
-    TotalTime is +(TotalTime1,Time), TotalPrice is +(TotalPrice1,Pr).
+    TotalTime is (TotalTime1 + Time), TotalPrice is (TotalPrice1 + Pr).
 
 minRoute([H|[]],H).
 minRoute([H1,H2|[]], Out) :-
