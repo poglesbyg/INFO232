@@ -1,3 +1,8 @@
+%% Author: Paul Grant (pgr023)
+%% Class: INFO232
+%% Date: November 19, 2014
+%% Title: Oblig 2
+
 lesFil(FilNavn, Lines) :-
     open(FilNavn, read, Str),
     lesFil_hp(Str,Lines),
@@ -30,7 +35,9 @@ createRoutes([Start, End, 'fly', TimeInMin, Price | Rest]) :-
 createRoutes([Start, End, Transportation, TimeInMin, Price | Rest]) :- 
     assert(route(Start, End, Transportation, TimeInMin, Price)),
     createRoutes(Rest).
-
+% Here we add the data to the program
+% If you need to read the file into the program again
+% the predicate retractStuff has been created.
 :- writeDataBase.
 
 % beskriv takes in a city name and prints out a short 
@@ -41,7 +48,7 @@ beskriv(Name) :-
     write(' med '), write(Pop), write(' innbyggere.'),nl,
     write(Fact).
 
-% listByer/1 gives a list of all the cities
+% listByer gives a list of all the cities
 
 listByer(List) :-
     findall(Name, city(Name, _,_,_,_,_),List).
@@ -70,6 +77,7 @@ heuristic(Dist, Time) :-
     % t = d /v
     Time is Dist / 800.
 
+% s for the astar algorithm
 s(Node, Next, Cost) :- route(Node,Next,_,Cost,_). 
 
 finnReiseRaskest(Start, End) :-
@@ -83,6 +91,7 @@ finnReiseRaskest(Start, End) :-
     write('Total price: '), write(TotalPrice), write(' Norwegian kroner.'),
     retract(goal(_)).
 
+% the printing predicate for finnReiseRaskest
 writeRoutes([_ | []], Time, Price) :-
     Time is 0, Price is 0, true.
 writeRoutes([Head, Next | Rest], TotalTime, TotalPrice) :-
@@ -92,6 +101,7 @@ writeRoutes([Head, Next | Rest], TotalTime, TotalPrice) :-
     writeRoutes([Next|Rest],TotalTime1,TotalPrice1),
     TotalTime is (TotalTime1 + Time), TotalPrice is (TotalPrice1 + Pr).
 
+% minRoute finds the route with the least amount of time
 minRoute([H|[]],H).
 minRoute([H1,H2|[]], Out) :-
     H1 = _/Time1/_,
@@ -105,6 +115,7 @@ minRoute([H1,H2,H3|[]], Out) :-
     ( (Time2 =< Time1), (Time2 =< Time3), Out = H2 );
     ( (Time3 =< Time1), (Time3 =< Time2), Out = H3 ).
 
+% Retracts all routes and cities from the database read into the file
 retractStuff :- retractall(route(_,_,_,_,_)),
                 retractall(city(_,_,_,_,_,_)).
 
@@ -143,5 +154,7 @@ insertordered(P,[],[P]).
 f(path(_,_,F),F).
 g(path(_,G,_),G).
 
+% main is a test function. you can run it to see that the best path
+% from Bergen to Stockholm exists.
 main :- write('Hello World'),nl,
         finnReiseRaskest('Bergen', 'Stockholm').
