@@ -97,7 +97,7 @@ writeRoutes([_ | []], Time, Price) :-
 writeRoutes([Head, Next | Rest], TotalTime, TotalPrice) :-
     findall(KT1/Time1/Pr1,route(Head,Next,KT1,Time1,Pr1),RuteSpecs),
     minRoute(RuteSpecs, KT/Time/Pr),
-    write(KT),write(' from '),write(Head),write(' to '),write(Next),write(.),nl,
+    Write(KT),write(' from '),write(Head),write(' to '),write(Next),write(.),nl,
     writeRoutes([Next|Rest],TotalTime1,TotalPrice1),
     TotalTime is (TotalTime1 + Time), TotalPrice is (TotalPrice1 + Pr).
 
